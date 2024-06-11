@@ -1,0 +1,260 @@
+
+************************
+2024-06-09 20:44:01
+************************
+https://www.reddit.com/r/linux/comments/sdf3434/RANDOM_GIBBERISHH
+Upvotes: 2
+
+Ha! I've TWO books specifically on recursion.
+
+I've put them next to each other on the bookshelf. Nobody has caught my joke yet...
+
+
+************************
+2024-06-09 20:16:46
+************************
+https://www.reddit.com/r/linux/comments/sdf3434/RANDOM_GIBBERISHH
+Upvotes: 26
+
+I'm not an Arch person, but I do use the Arch wiki and consider it one of the finest works ever assembled.
+
+It is a true masterpiece.
+
+
+************************
+2024-06-09 16:51:25
+************************
+https://www.reddit.com/r/linux/comments/sdf3434/RANDOM_GIBBERISHH
+Upvotes: 5
+
+Being very serious, it might be time to go to Windows or Apple.
+
+Second, your question is almost useless - read this: [http://catb.org/\~esr/faqs/smart-questions.html](http://catb.org/~esr/faqs/smart-questions.html)
+
+Now, we can offer generic advice.
+
+* Take photos, or at worst, make a video of what you are seeing
+* At the "manufacturers logo" hit ESC. It will show you what happening
+* Never ever turn your PC off without shutting it down first. It will cause a data corruption.
+* The probable reason why it took forever to boot is it was fixing all the problems from before. DO NOT interrupt it.
+* Lastly, run this in a terminal: `sudo systemd-analyze blame`  It will give you a sexy output of what is taking the time to start up. With that, we can help diagnose.
+* Next, run this: `sudo systemd-analyze critical-chain` It will show you what comes in what order and where the real delay is
+* Each of these are important and useful to write down
+
+.........
+
+
+Here is the output example of the commands above.
+
+*I can see that the BIG WAIT for me is the NetworkManager. If I didn't know why this delay was occurring* *^((which I do))* *then it would let me target what to do next.*
+
+    ┬─[aRandomUser@reddit:/etc]
+    ╰─>$ sudo systemd-analyze blame
+    [sudo] password for aRandomUser:
+    5min 18.139s systemd-fsck@dev-disk-by\x2dlabel-1TB_rusty.service
+         36.104s plocate-updatedb.service
+         30.992s NetworkManager-wait-online.service
+         10.937s mintupdate-automation-upgrade.service
+         10.173s gpu-manager.service
+          6.138s man-db.service
+          5.401s grub-initrd-fallback.service
+          5.176s logrotate.service
+          3.604s systemd-cryptsetup@luks\x2d4ec2310a\x2d4c12\x2d4435\x2dac9c\x2d4d984df4adfe.service
+          3.147s docker.service
+          2.547s mnt-NAS.mount
+          2.289s udisks2.service
+          2.270s smartmontools.service
+          2.171s mnt-router.mount
+          2.161s webmin.service
+          2.011s postfix@-.service
+          1.443s apt-daily.service
+          1.344s vboxdrv.service
+          1.079s mintupdate-automation-autoremove.service
+           792ms systemd-journal-flush.service
+           668ms systemd-random-seed.service
+           462ms dev-nvme0n1p2.device
+           366ms networkd-dispatcher.service
+           365ms apt-daily-upgrade.service
+           354ms containerd.service
+           312ms cpufrequtils.service
+           258ms mnt-1TB_rusty.mount
+           241ms ModemManager.service
+           240ms accounts-daemon.service
+           231ms e2scrub_reap.service
+           224ms ubuntu-system-adjustments.service
+           218ms bluetooth.service
+           215ms systemd-logind.service
+           192ms lm-sensors.service
+           163ms switcheroo-control.service
+           151ms blueman-mechanism.service
+           145ms qemu-kvm.service
+           138ms systemd-journald.service
+           136ms systemd-udev-trigger.service
+
+
+Example 2
+
+    ┬─[aRandomUser@reddit:/etc]
+    ╰─>$ sudo systemd-analyze critical-chain
+    The time when unit became active or started is printed after the "@" character.
+    The time the unit took to start is printed after the "+" character.
+
+    graphical.target u/36.985s
+    └─multi-user.target u/36.985s
+      └─docker.service u/33.837s +3.147s
+        └─network-online.target u/33.833s
+          └─NetworkManager-wait-online.service u/2.840s +30.992s
+            └─NetworkManager.service u/2.673s +129ms
+              └─dbus.service u/2.667s
+                └─basic.target u/2.646s
+                  └─sockets.target u/2.645s
+                    └─libvirtd-ro.socket u/2.645s
+                      └─libvirtd.socket u/2.619s +5ms
+                        └─sysinit.target u/2.566s
+                          └─systemd-timesyncd.service u/2.463s +101ms
+                            └─systemd-tmpfiles-setup.service u/2.430s +22ms
+                              └─systemd-journal-flush.service u/1.635s +792ms
+                                └─systemd-remount-fs.service u/1.550s +74ms
+                                  └─systemd-journald.socket u/1.464s
+                                    └─system.slice u/1.402s
+                                      └─-.slice u/1.402s
+
+
+
+************************
+2024-06-09 13:23:19
+************************
+https://www.reddit.com/r/linux/comments/sdf3434/RANDOM_GIBBERISHH
+Upvotes: 1
+
+Here is one **that should be a tool** ^((full disclosure, I just did this for myself))
+
+* Provides a list of directories, the file count and the total file size.
+* Format of output: size - count - dirName
+* Pretty format output
+* Inputs of:
+   * Depth as $1
+   * Directory as $2
+* Bonus points for sorting option!
+   * $3 columnName
+   * $4 sortOrder
+
+**edit - more detail**
+
+    ┬─[aRandomUser@reddit:/etc]
+    ╰─>$ sudo ~/apps/diskusage.sh 1
+    Disk Usage File Count Directory
+    ---------- ---------- ---------
+    19M        2696       /etc
+    8.0K       1          /etc/mdadm
+    12K        2          /etc/bash_completion.d
+    36K        8          /etc/sysctl.d
+    16K        3          /etc/rsyslog.d
+    56K        13         /etc/modprobe.d
+    64K        9          /etc/skel
+    8.0K       1          /etc/sasl2
+    20K        3          /etc/timeshift
+    8.0K       1          /etc/ipp-usb
+
+
+************************
+2024-06-09 13:12:33
+************************
+https://www.reddit.com/r/linux/comments/sdf3434/RANDOM_GIBBERISHH
+Upvotes: 6
+
+I feel its absolutely excellent that Linux isn't "ageist" but capability-driven.
+
+Here, age is a meaningless construct. We are here both as learners AND teachers.
+
+It fills me with joy to help everyone, answering complex questions, solving difficult problems.
+
+
+************************
+2024-06-09 11:27:05
+************************
+https://www.reddit.com/r/linux/comments/sdf3434/RANDOM_GIBBERISHH
+Upvotes: 1
+
+I did this once in PHP. It was good fun.
+
+It was to import photography of children's clothes for a website.
+
+Next, write a report of the images with ugly transformations... Using sqllite as the db 🙃
+
+
+************************
+2024-06-09 11:22:28
+************************
+https://www.reddit.com/r/linux/comments/sdf3434/RANDOM_GIBBERISHH
+Upvotes: 1
+
+Message your small hosting company and say you are looking for a bash project.
+
+They ALL have a backlog of job automations and performance rewrites longer than the Magna Carta.
+
+"Free?", they'll say.... Here are 30 projects that have been on the critical list for a decade....
+
+
+************************
+2024-06-09 11:13:09
+************************
+https://www.reddit.com/r/linux/comments/sdf3434/RANDOM_GIBBERISHH
+Upvotes: 1
+
+and then there is Perl....
+
+My beard fell out having to use that 🙊
+
+
+************************
+2024-06-09 03:21:02
+************************
+https://www.reddit.com/r/linux/comments/sdf3434/RANDOM_GIBBERISHH
+Upvotes: 1
+
+Slight change to this.
+
+* formatting of commands :)
+* -t  option is unknown
+
+&#8203;
+
+    cd /dev
+    sh MAKEDEV sd0
+    fdisk -i sd0
+
+
+************************
+2024-06-09 01:27:14
+************************
+https://www.reddit.com/r/linux/comments/sdf3434/RANDOM_GIBBERISHH
+Upvotes: 2
+
+[https://fishshell.com/](https://fishshell.com/)
+
+It adds a lot of flavour to the command line. It has a lot of interesting features that aide learning.
+
+
+************************
+2024-06-09 00:52:48
+************************
+https://www.reddit.com/r/linux/comments/sdf3434/RANDOM_GIBBERISHH
+Upvotes: 2
+
+TLDR is indispensable.  As is FISH.
+
+
+************************
+2024-06-09 00:49:11
+************************
+https://www.reddit.com/r/linux/comments/sdf3434/RANDOM_GIBBERISHH
+Upvotes: 2
+
+GREAT book --> [https://www.amazon.com.au/gp/product/1718500408](https://www.amazon.com.au/gp/product/1718500408)
+
+How Linux Works, 3rd Edition: What Every Superuser Should Know
+
+ISBN 978-1718500402
+
+Covers off everything in a precise and thorough manner, without getting super bogged down.
