@@ -1,5 +1,5 @@
 
-### Purpose
+## Purpose
 
 Save all of your Reddit comments to a text file or database.
 
@@ -14,7 +14,9 @@ Save all of your Reddit comments to a text file or database.
 - Reddit does not offer a simple tool to dump ones comments
 - This is useful if your posts, comments or account is summarily blasted by the various Admin Overlords... :(
 
-### WHAT
+
+
+## WHAT
 
 There are 3 main scripts:
 
@@ -24,11 +26,11 @@ There are 3 main scripts:
 
 A fourth script will _update the databases existing records_ with the Community Name.  This is of little use to most. Its purpose was for statistical analysis. 
 
-### USAGE
+### USAGE 1
 
 From the terminal command line type: `python3 reddit_comments_scrape_DB.py`
 
-The script will:
+This script will:
 
     * rip down the last 1000 comments
     * create a database schema if it does not already exist
@@ -51,7 +53,26 @@ This way, as your comments gain in popularity over time (or not!) the tally/vote
 
 Also, should your text be edited, the changes can be seen over time. (I occasionally edit my tech answers for **surious tpyos**)
 
-### SCRIPT REQUIREMENTS
+### USAGE 2
+
+From the terminal command line type: `python3 reddit_comments_scrape_FILE.py`
+
+This script will:
+
+    * rip down the last 1000 comments
+    * create a log, with a sensible name and plonk the comments there
+
+All the info from Usage 1 is the same.
+
+This is by far the very easiest way to view your comments, as the file is just test.
+
+An example of an export is in the file listing above.
+
+
+
+
+
+## SCRIPT REQUIREMENTS
 
 You will need to install the PIPs `praw` and `sqlite3`.  Also `re` and `datetime` if you are missing them.
 
@@ -63,7 +84,9 @@ For Debian based Linux you'll also need SQLite and a decent SQL GUI browser:
 
 For other Linux and Windows, do what is needed :)
 
-### REGISTRATION
+
+
+## REGISTRATION
 
 Read this: https://praw.readthedocs.io/en/stable/getting_started/authentication.html
 
@@ -88,6 +111,8 @@ Here is an **_EXAMPLE_**
     password="1guiwevlfo00esyy"
     user_agent="testscript by u/fakebot3"
 
+
+
 ### GENERAL COMMENTARY
 
 * The 1000 comment limitation is imposed by Reddit
@@ -99,11 +124,10 @@ Rather than using Reddit useless search (and increasingly more useless over time
 
 The text files were fine, but searching them was a PITA. Now, with SQLlite, one simply opens the database file and the search is easy.
 
+
+
 ### ASSISTANCE
 
 If you feel the scripts are missing something, please feel free to make a PR, comment or add a feature request.
 
 I sincerely hope you enjoy using this small tool :)
-
-
-
