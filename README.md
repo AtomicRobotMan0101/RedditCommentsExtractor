@@ -97,7 +97,7 @@ Read this: https://praw.readthedocs.io/en/stable/getting_started/authentication.
 - Create credentials
 
 Once that is done, go [here](https://old.reddit.com/prefs/apps/) 
-- Go to the click the "**Create Another Ap**" button
+- Click the "**Create Another Ap**" button
 - Select **Script**
 - Follow your nose
 
